@@ -1,32 +1,144 @@
-# Prerequisites
-*.d
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+vector<string> item_codes = {"A1", "A2", "B1", "B2", "B3", "C1", "C2", "D1", "D2", "E1", "E2", "E3", "F1", "F2", "G1", "G2"};
+vector<string> descriptions = {"Compact", "Tower", "8 GB", "16 GB", "32 GB", "1 TB HDD", "2 TB HDD", "240 GB SSD", "480 GB SSD", "1 TB HDD", "2 TB HDD", "4 TB HDD", "DVD/Blu-Ray Player", "DVD/Blu-Ray Re-writer", "Standard Version", "Professional Version"};
+vector<double> prices = {75.00, 150.00, 79.99, 149.99, 299.99, 49.99, 89.99, 59.99, 119.99, 49.99, 89.99, 129.99, 50.00, 100.00, 100.00, 175.00};
 
-# Precompiled Headers
-*.gch
-*.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+void showAvailableItems() {
+    cout << "Available Items:" << endl;
+    cout << "Item Code  Description              Price ($)" << endl;
+    for (int i = 0; i < item_codes.size(); i++) {
+        cout << item_codes[i] << "\t" << descriptions[i] << "\t$" << prices[i] << endl;
+    }
+}
 
-# Fortran module files
-*.mod
-*.smod
+int main() {
+    vector<string> chosenComponents;
+    double total_price = 200.0; 
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
 
-# Executables
-*.exe
-*.out
-*.app
+    string chosenCase, chosenRam, chosenHdd;
+
+    showAvailableItems();
+
+    cout << "Select a case (Enter item code A1 or A2): ";
+    cin >> chosenCase;
+
+    int caseIndex = -1;
+    for (int i = 0; i < item_codes.size(); i++) {
+        if (chosenCase == item_codes[i]) {
+            caseIndex = i;
+            break;
+        }
+    }
+
+    if (caseIndex == -1) {
+        cout << "Invalid choice for the case." << endl;
+        return 1;
+    }
+    chosenComponents.push_back(descriptions[caseIndex]);
+    total_price += prices[caseIndex];
+
+    cout << "Select RAM (Enter item code B1, B2, or B3): ";
+    cin >> chosenRam;
+
+    int ramIndex = -1;
+    for (int i = 0; i < item_codes.size(); i++) {
+        if (chosenRam == item_codes[i]) {
+            ramIndex = i;
+            break;
+        }
+    }
+
+    if (ramIndex == -1) {
+        cout << "Invalid choice for RAM." << endl;
+        return 1;
+    }
+    chosenComponents.push_back(descriptions[ramIndex]);
+    total_price += prices[ramIndex];
+
+    cout << "Select Main Hard Disk Drive (Enter item code C1 or C2): ";
+    cin >> chosenHdd;
+
+    int hddIndex = -1;
+    for (int i = 0; i < item_codes.size(); i++) {
+        if (chosenHdd == item_codes[i]) {
+            hddIndex = i;
+            break;
+        }
+    }
+
+    if (hddIndex == -1) {
+        cout << "Invalid choice for Main Hard Disk Drive." << endl;
+        return 1;
+    }
+    chosenComponents.push_back(descriptions[hddIndex]);
+    total_price += prices[hddIndex];
+
+    while (true) {
+        string wantMore;
+        cout << "Do you want to buy more components? (yes/no): ";
+        cin >> wantMore;
+        if (wantMore != "yes") {
+            break;
+        }
+
+        cout << "Select a component: " << endl;
+        for (int i = 0; i < item_codes.size(); i++) {
+            cout << item_codes[i] << "\t" << descriptions[i] << " ($" << prices[i] << ")" << endl;
+        }
+
+        string chosenComponent;
+        cin >> chosenComponent;
+
+        int componentIndex = -1;
+        for (int i = 0; i < item_codes.size(); i++) {
+            if (chosenComponent == item_codes[i]) {
+                componentIndex = i;
+                break;
+            }
+        }
+
+        if (componentIndex == -1) {
+            cout << "Invalid choice for the selected component." << endl;
+            continue;
+        }
+
+        chosenComponents.push_back(descriptions[componentIndex]);
+        total_price += prices[componentIndex];
+    }
+
+    
+    int additionalItemsCount = chosenComponents.size() - 3;  
+
+  
+    double discount = 0.0;
+    if (additionalItemsCount == 1) {
+        discount = 0.05;  
+    } else if (additionalItemsCount >= 2) {
+        discount = 0.10;  
+    }
+
+
+    double discountAmount = total_price * discount;
+
+
+    double total_price_after_discount = total_price - discountAmount;
+
+    
+    cout << "Total Price Before Discount: $" << total_price << endl;
+    cout << "Chosen Components:" << endl;
+    for (string component : chosenComponents) {
+        cout << component << endl;
+    }
+    cout << "Discount Applied: " << (discount * 100) << "%" << endl;
+    cout << "Amount Saved: $" << discountAmount << endl;
+    cout << "New Price After Discount: $" << total_price_after_discount << endl;
+
+    return 0;
+}
